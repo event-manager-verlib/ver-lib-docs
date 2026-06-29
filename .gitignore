@@ -1,0 +1,11 @@
+# Sphinx build output
+_build/
+*.pyc
+__pycache__/
+
+# Obsidian 共有設定 (任意・端末依存のため Git 管理対象外)
+.obsidian/
+
+# OS
+.DS_Store
+Thumbs.db
