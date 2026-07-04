@@ -1,0 +1,83 @@
+/* VER-Lib マニュアル — event-manager-design-system 準拠のカスタムスタイル
+ *
+ * ベーステーマ = Furo。色/フォントは design-system の semantic tokens に準拠する。
+ * SSoT = event-manager-design-system/build/css/variables.css
+ * 主要な色は conf.py の html_theme_options 側で Furo 変数にマップ済。
+ * 本ファイルは font 読込 + design-system 固有の装飾 (丸み / 見出し / admonition の
+ * state カラー / テーブル) を担う。tokens 改訂時は両方を追従させること。
+ */
+
+/* お菓子ブランドの丸ゴシック。GitHub Pages 公開ゆえ Google Fonts から読込。
+ * 自己ホストしたい場合は woff2 を _static に置いて @font-face に置換する。 */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap');
+
+/* design-system semantic tokens (本 CSS で使う必要最小サブセット) */
+:root {
+  --vl-almond:        #9E8879;
+  --vl-caramel-dark:  #A68465;
+  --vl-pistachio:     #B7C0A6;
+  --vl-success:       #6EAB8A;  /* state.success */
+  --vl-warning:       #BF975C;  /* state.warning */
+  --vl-error:         #B35C5C;  /* state.error   */
+  --vl-radius: 10px;            /* Rounded 1c に合わせた柔らかい角 */
+}
+
+/* --- 見出し: design-system heading.page (太字 + 下線ボーダー) --- */
+h1, h2, h3,
+.sidebar-brand-text { font-weight: 700; }
+
+article h2 {
+  border-bottom: 2px solid var(--color-foreground-border);
+  padding-bottom: 0.2em;
+}
+
+/* --- リンク: 中間トーンでもコントラストを担保するため常に下線 --- */
+article a.reference:not(.headerlink) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- コード: 丸みでブランド感 --- */
+.highlight,
+div[class^="highlight"] { border-radius: var(--vl-radius); }
+
+code.literal {
+  background: var(--color-background-secondary);
+  border-radius: 6px;
+  padding: 0.1em 0.35em;
+}
+
+/* --- admonition: design-system の state カラーにマップ + 丸み --- */
+.admonition { border-radius: var(--vl-radius); overflow: hidden; }
+
+.admonition.note,
+.admonition.seealso {
+  --color-admonition-title: var(--vl-almond);
+  --color-admonition-title-background: rgba(158, 136, 121, 0.12);
+}
+.admonition.tip,
+.admonition.hint,
+.admonition.important {
+  --color-admonition-title: var(--vl-success);
+  --color-admonition-title-background: rgba(110, 171, 138, 0.12);
+}
+.admonition.warning,
+.admonition.caution,
+.admonition.attention {
+  --color-admonition-title: var(--vl-warning);
+  --color-admonition-title-background: rgba(191, 151, 92, 0.12);
+}
+.admonition.danger,
+.admonition.error {
+  --color-admonition-title: var(--vl-error);
+  --color-admonition-title-background: rgba(179, 92, 92, 0.12);
+}
+
+/* --- テーブル: 丸み + ヘッダに副背景 --- */
+table.docutils {
+  border-radius: var(--vl-radius);
+  overflow: hidden;
+}
+table.docutils thead th {
+  background: var(--color-background-secondary);
+}
