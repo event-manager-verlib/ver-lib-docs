@@ -1,5 +1,8 @@
 # Sphinx build output
 _build/
+
+# ビルド時に checkout するリリースノート SSoT リポ (CI/ローカルとも Git 管理外)
+external/
 *.pyc
 __pycache__/
 
