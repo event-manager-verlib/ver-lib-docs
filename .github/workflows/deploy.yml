@@ -20,6 +20,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # リリースノート SSoT (別リポ・public) を取得 → ビルド時に 02_release_note.md を再生成。
+      # public リポのため token 不要。取得できなくてもビルドはコミット済み md で継続する。
+      - name: Checkout release notes (SSoT)
+        uses: actions/checkout@v4
+        with:
+          repository: event-manager-verlib/event-manager-release-notes
+          path: external/release-notes
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

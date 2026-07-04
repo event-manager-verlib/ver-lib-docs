@@ -34,6 +34,27 @@ html_static_path = ["pages/_static"]
 html_title = "VER-Lib マニュアル"
 html_css_files = ["custom.css"]
 
+# --- リリースノート自動生成 ---------------------------------------------------
+# pages/06_付録/02_release_note.md を releases.json (別リポ SSoT) から毎ビルド再生成する。
+# releases.json が見つからない環境ではスキップし、コミット済みの md をそのまま使う
+# (= ビルドは失敗しない)。詳細は tools/generate_release_notes.py。
+def setup(app):
+    def _gen(_app):
+        import importlib.util
+        from pathlib import Path
+
+        try:
+            script = Path(__file__).parent / "tools" / "generate_release_notes.py"
+            spec = importlib.util.spec_from_file_location("gen_release_notes", script)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            mod.main()
+        except Exception as exc:  # 生成失敗でビルドは止めない
+            print(f"[release-notes] 生成をスキップ: {exc}")
+
+    app.connect("builder-inited", _gen)
+
+
 html_theme_options = {
     # --- light (お菓子パレット: cream 地 / bitterChoco 文字) ---
     "light_css_variables": {
