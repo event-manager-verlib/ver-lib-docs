@@ -20,13 +20,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # リリースノート SSoT (別リポ・public) を取得 → ビルド時に 02_release_note.md を再生成。
-      # public リポのため token 不要。取得できなくてもビルドはコミット済み md で継続する。
+      # リリースノート SSoT (別リポ・private) を取得 → ビルド時に 02_release_note.md を再生成。
+      # private リポのため read 権を持つ token を渡す (default GITHUB_TOKEN は当リポ限定で 404)。
+      # org App token を release-notes に scope して発行 (他リポと同じ ORG_APP_ID/KEY を再利用)。
+      - name: Generate release-notes token
+        id: rn_token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.ORG_APP_ID }}
+          private-key: ${{ secrets.ORG_APP_PRIVATE_KEY }}
+          owner: event-manager-verlib
+          repositories: event-manager-release-notes
+      # 取得できなくてもビルドはコミット済み md で継続する (continue-on-error)。
       - name: Checkout release notes (SSoT)
+        continue-on-error: true
         uses: actions/checkout@v4
         with:
           repository: event-manager-verlib/event-manager-release-notes
           path: external/release-notes
+          token: ${{ steps.rn_token.outputs.token }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
